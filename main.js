@@ -1,44 +1,45 @@
 import galleryItems from './gallery-items.js';
 
-// {
-//   /* <li class="gallery__item">
-//   <a
-//     class="gallery__link"
-//     href="https://cdn.pixabay.com/photo/2010/12/13/10/13/tulips-2546_1280.jpg"
-//   >
-//     <img
-//       class="gallery__image"
-//       src="https://cdn.pixabay.com/photo/2010/12/13/10/13/tulips-2546__340.jpg"
-//       data-source="https://cdn.pixabay.com/photo/2010/12/13/10/13/tulips-2546_1280.jpg"
-//       alt="Tulips"
-//     />
-//   </a>
-// </li> */
-// }
+//Создание элементов галереи
 
-const createImage = ({ preview, original, description }) => {
+const galleryListRef = document.querySelector('.js-gallery');
+
+const createListItem = ({ preview, original, description }) => {
   const newImgRef = document.createElement('img');
   newImgRef.classList.add('gallery__image');
   newImgRef.setAttribute('src', preview);
   newImgRef.setAttribute('data-source', original);
   newImgRef.setAttribute('alt', description);
 
-  return newImgRef;
-};
-
-const createLink = ({ original }, callback) => {
-  const newlinkRef = document.createElement('img');
-  newlinkRef.classList.add('gallery__link');
+  const newLinkRef = document.createElement('a');
+  newLinkRef.classList.add('gallery__link');
   newLinkRef.setAttribute('src', original);
+  newLinkRef.appendChild(newImgRef);
 
-  newlinkRef.childNodes(callback());
-  return newlinkRef;
-};
-
-const createListItem = callback => {
   const newListItemRef = document.createElement('li');
   newListItemRef.classList.add('gallery__item');
+  newListItemRef.appendChild(newLinkRef);
 
-  newListItemRef.childNodes(callback());
   return newListItemRef;
 };
+
+const allListItems = galleryItems.map(createListItem);
+
+galleryListRef.append(...allListItems);
+
+// Открытие модального окна
+
+const lightboxRef = document.querySelector('.js-lightbox');
+const galleryListItemRef = document.querySelector('.gallery__item');
+
+const getOriginImageUrl = event => {
+  const originImageUrl = event.target.dataset.source;
+  console.log(originImageUrl);
+};
+
+const openModal = () => {
+  lightboxRef.classList.add('is-open');
+};
+
+galleryListRef.addEventListener('click', getOriginImageUrl);
+galleryListItemRef.addEventListener('click', openModal);
