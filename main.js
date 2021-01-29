@@ -30,16 +30,36 @@ galleryListRef.append(...allListItems);
 // Открытие модального окна
 
 const lightboxRef = document.querySelector('.js-lightbox');
-const galleryListItemRef = document.querySelector('.gallery__item');
+const imageLightboxRef = document.querySelector('.lightbox__image');
 
-const getOriginImageUrl = event => {
+const onGalleryClick = event => {
+  if (event.target.nodeName !== 'IMG') {
+    return;
+  }
+
   const originImageUrl = event.target.dataset.source;
-  console.log(originImageUrl);
+  imageLightboxRef.src = originImageUrl;
 };
 
-const openModal = () => {
+const openModal = event => {
+  if (event.target.nodeName !== 'IMG') {
+    return;
+  }
+
   lightboxRef.classList.add('is-open');
 };
 
-galleryListRef.addEventListener('click', getOriginImageUrl);
-galleryListItemRef.addEventListener('click', openModal);
+galleryListRef.addEventListener('click', onGalleryClick);
+galleryListRef.addEventListener('click', openModal);
+
+// Закрытие модального окна
+
+const closeModalBtn = document.querySelector(
+  'button[data-action="close-lightbox"]',
+);
+
+const closeModal = event => {
+  lightboxRef.classList.remove('is-open');
+};
+
+closeModalBtn.addEventListener('click', closeModal);
