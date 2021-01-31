@@ -1,10 +1,23 @@
 import galleryItems from './gallery-items.js';
 
+// Ссылки на элементы
+const galleryListRef = document.querySelector('.js-gallery');
+const lightboxRef = document.querySelector('.js-lightbox');
+const imageLightboxRef = document.querySelector('.lightbox__image');
+const closeModalBtn = document.querySelector(
+  'button[data-action="close-lightbox"]',
+);
+const backdropRef = document.querySelector('.lightbox__overlay');
+
+// События
+galleryListRef.addEventListener('click', onGalleryClick);
+galleryListRef.addEventListener('click', onOpenModal);
+closeModalBtn.addEventListener('click', onCloseModal);
+backdropRef.addEventListener('click', onBackdropModal);
+
 //Создание элементов галереи
 
-const galleryListRef = document.querySelector('.js-gallery');
-
-const createListItem = ({ preview, original, description }) => {
+function createListItem({ preview, original, description }) {
   const newImgRef = document.createElement('img');
   newImgRef.classList.add('gallery__image');
   newImgRef.setAttribute('src', preview);
@@ -21,7 +34,7 @@ const createListItem = ({ preview, original, description }) => {
   newListItemRef.appendChild(newLinkRef);
 
   return newListItemRef;
-};
+}
 
 const allListItems = galleryItems.map(createListItem);
 
@@ -29,21 +42,19 @@ galleryListRef.append(...allListItems);
 
 // Открытие модального окна
 
-const lightboxRef = document.querySelector('.js-lightbox');
-const imageLightboxRef = document.querySelector('.lightbox__image');
+function onGalleryClick(event) {
+  const galleryElRef = event.target;
 
-const onGalleryClick = event => {
-  if (event.target.nodeName !== 'IMG') {
+  if (galleryElRef.nodeName !== 'IMG') {
     return;
   }
 
-  const originImageUrl = event.target.dataset.source;
+  const originImageUrl = galleryElRef.dataset.source;
 
   imageLightboxRef.src = originImageUrl;
-  imageLightboxRef.alt = event.target.alt;
-};
+}
 
-const onOpenModal = event => {
+function onOpenModal(event) {
   if (event.target.nodeName !== 'IMG') {
     return;
   }
@@ -51,39 +62,22 @@ const onOpenModal = event => {
   window.addEventListener('keydown', onEscPress);
 
   lightboxRef.classList.add('is-open');
-};
-
-galleryListRef.addEventListener('click', onGalleryClick);
-galleryListRef.addEventListener('click', onOpenModal);
+}
 
 // Закрытие модального окна
 
-const closeModalBtn = document.querySelector(
-  'button[data-action="close-lightbox"]',
-);
-
-const onCloseModal = () => {
+function onCloseModal() {
   window.removeEventListener('keydown', onEscPress);
   lightboxRef.classList.remove('is-open');
 
   imageLightboxRef.src = '';
-};
+}
 
-closeModalBtn.addEventListener('click', onCloseModal);
-
-// Закрытие по клику на бэкдроп
-
-const backdropRef = document.querySelector('.lightbox__overlay');
-
-const onBackdropCloseModal = event => {
+function onBackdropModal(event) {
   if (event.target === event.currentTarget) {
     onCloseModal();
   }
-};
-
-backdropRef.addEventListener('click', onBackdropCloseModal);
-
-// Закрытие по нажатию на Esc
+}
 
 function onEscPress(event) {
   if (event.code === 'Escape') {
