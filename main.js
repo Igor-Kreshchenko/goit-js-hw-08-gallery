@@ -17,12 +17,13 @@ backdropRef.addEventListener('click', onBackdropModal);
 
 //Создание элементов галереи
 
-function createListItem({ preview, original, description }) {
+function createListItem({ preview, original, description }, i) {
   const newImgRef = document.createElement('img');
   newImgRef.classList.add('gallery__image');
   newImgRef.setAttribute('src', preview);
   newImgRef.setAttribute('data-source', original);
   newImgRef.setAttribute('alt', description);
+  newImgRef.setAttribute('data-index', i);
 
   const newLinkRef = document.createElement('a');
   newLinkRef.classList.add('gallery__link');
@@ -33,10 +34,13 @@ function createListItem({ preview, original, description }) {
   newListItemRef.classList.add('gallery__item');
   newListItemRef.appendChild(newLinkRef);
 
+  i += 1;
   return newListItemRef;
 }
 
-const allListItems = galleryItems.map(createListItem);
+const allListItems = galleryItems.map((element, index) =>
+  createListItem(element, index),
+);
 
 galleryListRef.append(...allListItems);
 
@@ -44,7 +48,6 @@ galleryListRef.append(...allListItems);
 
 function onGalleryClick(event) {
   event.preventDefault();
-
   const galleryElRef = event.target;
 
   if (galleryElRef.nodeName !== 'IMG') {
@@ -62,8 +65,7 @@ function onOpenModal(event) {
   }
 
   window.addEventListener('keydown', onEscPress);
-  window.addEventListener('keydown', onLeftArrowPress);
-  window.addEventListener('keydown', onRightArrowPress);
+  window.addEventListener('keydown', onArrowsPress);
 
   lightboxRef.classList.add('is-open');
 }
@@ -72,8 +74,8 @@ function onOpenModal(event) {
 
 function onCloseModal() {
   window.removeEventListener('keydown', onEscPress);
-  window.removeEventListener('keydown', onLeftArrowPress);
-  window.removeEventListener('keydown', onRightArrowPress);
+  window.removeEventListener('keydown', onArrowsPress);
+
   lightboxRef.classList.remove('is-open');
 
   imageLightboxRef.src = '';
@@ -92,14 +94,18 @@ function onEscPress(event) {
 }
 
 // Переключение слайдов с помощью стрелок
-function onLeftArrowPress(event) {
-  if (event.code === 'ArrowLeft') {
-    imageLightboxRef.src = '';
-  }
+let currentImgIndex;
+
+galleryListRef.addEventListener('click', getCurrentImgIndex);
+
+function getCurrentImgIndex(event) {
+  currentImgIndex = Number(event.target.dataset.index);
 }
 
-function onRightArrowPress(event) {
-  if (event.code === 'ArrowRight') {
-    imageLightboxRef.src = '';
+function onArrowsPress(event) {
+  if (event.code === 'ArrowLeft') {
+    imageLightboxRef.src = galleryItems[(currentImgIndex -= 1)].original;
+  } else if (event.code === 'ArrowRight') {
+    imageLightboxRef.src = galleryItems[(currentImgIndex += 1)].original;
   }
 }
