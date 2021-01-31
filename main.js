@@ -38,19 +38,23 @@ const onGalleryClick = event => {
   }
 
   const originImageUrl = event.target.dataset.source;
+
   imageLightboxRef.src = originImageUrl;
+  imageLightboxRef.alt = event.target.alt;
 };
 
-const openModal = event => {
+const onOpenModal = event => {
   if (event.target.nodeName !== 'IMG') {
     return;
   }
+
+  window.addEventListener('keydown', onEscPress);
 
   lightboxRef.classList.add('is-open');
 };
 
 galleryListRef.addEventListener('click', onGalleryClick);
-galleryListRef.addEventListener('click', openModal);
+galleryListRef.addEventListener('click', onOpenModal);
 
 // Закрытие модального окна
 
@@ -58,8 +62,31 @@ const closeModalBtn = document.querySelector(
   'button[data-action="close-lightbox"]',
 );
 
-const closeModal = event => {
+const onCloseModal = () => {
+  window.removeEventListener('keydown', onEscPress);
   lightboxRef.classList.remove('is-open');
+
+  imageLightboxRef.src = '';
 };
 
-closeModalBtn.addEventListener('click', closeModal);
+closeModalBtn.addEventListener('click', onCloseModal);
+
+// Закрытие по клику на бэкдроп
+
+const backdropRef = document.querySelector('.lightbox__overlay');
+
+const onBackdropCloseModal = event => {
+  if (event.target === event.currentTarget) {
+    onCloseModal();
+  }
+};
+
+backdropRef.addEventListener('click', onBackdropCloseModal);
+
+// Закрытие по нажатию на Esc
+
+function onEscPress(event) {
+  if (event.code === 'Escape') {
+    onCloseModal();
+  }
+}
