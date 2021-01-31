@@ -105,12 +105,12 @@ function getCurrentImgIndex(event) {
 function onArrowsPress(event) {
   if (event.code === 'ArrowLeft' && currentImgIndex > 0) {
     imageLightboxRef.src = galleryItems[(currentImgIndex -= 1)].original;
-    console.log('left');
+
   } else if (
     event.code === 'ArrowRight' &&
     currentImgIndex < galleryItems.length - 1
   ) {
     imageLightboxRef.src = galleryItems[(currentImgIndex += 1)].original;
-    console.log('right');
+
   }
 }
