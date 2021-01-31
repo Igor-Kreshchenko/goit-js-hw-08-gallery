@@ -43,6 +43,8 @@ galleryListRef.append(...allListItems);
 // Открытие модального окна
 
 function onGalleryClick(event) {
+  event.preventDefault();
+
   const galleryElRef = event.target;
 
   if (galleryElRef.nodeName !== 'IMG') {
@@ -60,6 +62,8 @@ function onOpenModal(event) {
   }
 
   window.addEventListener('keydown', onEscPress);
+  window.addEventListener('keydown', onLeftArrowPress);
+  window.addEventListener('keydown', onRightArrowPress);
 
   lightboxRef.classList.add('is-open');
 }
@@ -68,6 +72,8 @@ function onOpenModal(event) {
 
 function onCloseModal() {
   window.removeEventListener('keydown', onEscPress);
+  window.removeEventListener('keydown', onLeftArrowPress);
+  window.removeEventListener('keydown', onRightArrowPress);
   lightboxRef.classList.remove('is-open');
 
   imageLightboxRef.src = '';
@@ -82,5 +88,18 @@ function onBackdropModal(event) {
 function onEscPress(event) {
   if (event.code === 'Escape') {
     onCloseModal();
+  }
+}
+
+// Переключение слайдов с помощью стрелок
+function onLeftArrowPress(event) {
+  if (event.code === 'ArrowLeft') {
+    imageLightboxRef.src = '';
+  }
+}
+
+function onRightArrowPress(event) {
+  if (event.code === 'ArrowRight') {
+    imageLightboxRef.src = '';
   }
 }
