@@ -16,7 +16,6 @@ closeModalBtn.addEventListener('click', onCloseModal);
 backdropRef.addEventListener('click', onBackdropModal);
 
 //Создание элементов галереи
-
 function createListItem({ preview, original, description }, i) {
   const newImgRef = document.createElement('img');
   newImgRef.classList.add('gallery__image');
@@ -45,7 +44,6 @@ const allListItems = galleryItems.map((element, index) =>
 galleryListRef.append(...allListItems);
 
 // Открытие модального окна
-
 function onGalleryClick(event) {
   event.preventDefault();
   const galleryElRef = event.target;
@@ -71,7 +69,6 @@ function onOpenModal(event) {
 }
 
 // Закрытие модального окна
-
 function onCloseModal() {
   window.removeEventListener('keydown', onEscPress);
   window.removeEventListener('keydown', onArrowsPress);
@@ -105,12 +102,10 @@ function getCurrentImgIndex(event) {
 function onArrowsPress(event) {
   if (event.code === 'ArrowLeft' && currentImgIndex > 0) {
     imageLightboxRef.src = galleryItems[(currentImgIndex -= 1)].original;
-
   } else if (
     event.code === 'ArrowRight' &&
     currentImgIndex < galleryItems.length - 1
   ) {
     imageLightboxRef.src = galleryItems[(currentImgIndex += 1)].original;
-
   }
 }
